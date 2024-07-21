@@ -2,19 +2,19 @@ import CodeBlock from "../models/codeBlock.js";
 
 export const createCodeBlock = async (req, res) => {
     try {
-        const {title, code} = req.body;
+        const { title, code } = req.body;
         const user = req.user;
 
         if (!title || !code) {
             return res.status(400).send({ error: 'title and code are required' });
         }
-        
+
         const newCodeBlock = new CodeBlock({
             mentorId: user._id,
             title: title,
             code: code
         })
-        
+
         if (!newCodeBlock) {
             return res.status(400).send({ error: 'cannot create new CodeBlock' });
         }
@@ -30,7 +30,7 @@ export const createCodeBlock = async (req, res) => {
 
 export const getCodeBlocks = async (req, res) => {
     try {
-        
+
         const codeBlocks = await CodeBlock.find({});
 
         if (!codeBlocks) return res.status(200).json([]);
@@ -60,13 +60,8 @@ export const updateCodeBlock = async (req, res) => {
     try {
         const id = req.params.id;
         const updateData = req.body; // Data to update the code block
-        console.log("before: ", updateData);
-        const updatedCodeBlock = await CodeBlock.findOneAndUpdate(
-            { _id: id }, // Query condition
-            updateData, // Update data
-            { new: true } // Options to return the updated document
-        );
-        console.log("after: ", updatedCodeBlock);
+        const updatedCodeBlock = await CodeBlock.findOneAndUpdate({ _id: id }, updateData, { new: true });
+
         if (!updatedCodeBlock) {
             return res.status(404).json({ message: 'Code block not found' });
         }

@@ -1,5 +1,5 @@
 import toast from 'react-hot-toast';
-import { useEffect, useState } from'react';
+import { useEffect, useState } from 'react';
 
 const useGetCodeBlocks = () => {
     const [loading, setLoading] = useState(false);
@@ -13,15 +13,14 @@ const useGetCodeBlocks = () => {
                 const data = await response.json();
                 console.log("data: get code blocks", data);
                 if (data.error) {
-                    console.log("Error getting code blocks:", data.error);
                     throw new Error(data.error);
                 }
                 if (data) setCodeBlocks(data);
 
             } catch (error) {
-                console.error("Error getting code blocks:", error.message);
+                console.log("Error getting code blocks:", error.message);
                 toast.error(error.message);
-                
+
             } finally {
                 setLoading(false);
             };

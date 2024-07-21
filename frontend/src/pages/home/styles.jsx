@@ -1,11 +1,11 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const Container = styled.div`
   display: flex;
   flex-direction: column; /* Stack children vertically */
   align-items: center;
   height: 90vh; /* Full viewport height */
-  width: 100vw;  /* Full viewport width */
+  width: 100vw; /* Full viewport width */
 `;
 
 export const Card = styled.div`

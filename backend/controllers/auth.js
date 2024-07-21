@@ -5,21 +5,21 @@ import generateToken from '../utils/generateToken.js';
 
 export const signup = async (req, res) => {
     try {
-        const { username, password, confirmPassword} = req.body;
+        const { username, password, confirmPassword } = req.body;
 
         if (password !== confirmPassword) {
             return res.status(400).send({ error: 'Passwords do not match' });
         }
-        
+
         const user = await User.findOne({ username });
         if (user) {
             return res.status(400).send({ error: 'User already exists' });
         }
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const newUser = new User({ 
-            username, 
-            password: hashedPassword, 
+        const newUser = new User({
+            username,
+            password: hashedPassword,
         });
 
         await newUser.save();
@@ -61,7 +61,7 @@ export const login = async (req, res) => {
 
     } catch (err) {
         console.log("Error during login: ", err.message);
-        res.status(500).send({ error: 'Server error' });
+        res.status(500).send({ error: 'Internal server error' });
     }
 };
 
@@ -71,6 +71,6 @@ export const logout = async (req, res) => {
         res.status(200).json({ message: 'Logged out successfully' });
     } catch (err) {
         console.log("Error during logout: ", err.message);
-        res.status(500).send({ error: 'Server error' });
+        res.status(500).send({ error: 'Internal server error' });
     }
 };

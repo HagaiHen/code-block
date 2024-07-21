@@ -8,8 +8,8 @@ const useLogin = () => {
   const { authUser, setAuthUser } = useAuthContext();
 
   const login = async (username, password) => {
-    
-    const isValid = handleInputErrors({username, password});
+
+    const isValid = handleInputErrors({ username, password });
     if (!isValid) return;
 
     setLoading(true);
@@ -21,19 +21,20 @@ const useLogin = () => {
         },
         body: JSON.stringify({ username, password }),
       })
-    
-    const data = await res.json();
-    if (data.error) {
-        throw new Error(data.error);
-    }
 
-    localStorage.setItem("authUser", JSON.stringify(data));
-    setAuthUser(data);
+      const data = await res.json();
+      if (data.error) {
+        throw new Error(data.error);
+      }
+
+      localStorage.setItem("authUser", JSON.stringify(data));
+      setAuthUser(data);
 
     } catch (error) {
+      console.log("Error in login", error.message);
       toast.error(error.message);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
 
@@ -42,11 +43,11 @@ const useLogin = () => {
 
 export default useLogin;
 
-function handleInputErrors({username, password}) {
-    if (!username || !password) {
-        toast.error("please fill all fields");
-        return false;
-    }
+function handleInputErrors({ username, password }) {
+  if (!username || !password) {
+    toast.error("please fill all fields");
+    return false;
+  }
 
-    return true;
+  return true;
 }
