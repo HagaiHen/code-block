@@ -3,6 +3,8 @@ import Form from 'react-bootstrap/Form';
 import { Card, Container } from './styles';
 import { useState } from 'react';
 import useLogin from '../../hooks/useLogin.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 const Login = () => {
 
