@@ -41,3 +41,39 @@ export const getCodeBlocks = async (req, res) => {
         res.status(500).send({ error: "Internal server error" });
     }
 };
+
+export const getCodeBlock = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const codeBlock = await CodeBlock.findById(id);
+
+        if (!codeBlock) return res.status(200).json([]);
+        res.status(200).json(codeBlock);
+
+    } catch (error) {
+        console.log("error getting code blocks: ", error.message);
+        res.status(500).send({ error: "Internal server error" });
+    }
+};
+
+export const updateCodeBlock = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const updateData = req.body; // Data to update the code block
+        console.log("before: ", updateData);
+        const updatedCodeBlock = await CodeBlock.findOneAndUpdate(
+            { _id: id }, // Query condition
+            updateData, // Update data
+            { new: true } // Options to return the updated document
+        );
+        console.log("after: ", updatedCodeBlock);
+        if (!updatedCodeBlock) {
+            return res.status(404).json({ message: 'Code block not found' });
+        }
+
+        res.status(200).json(updatedCodeBlock);
+    } catch (error) {
+        console.log("Error updating code block: ", error.message);
+        res.status(500).send({ error: "Internal server error" });
+    }
+};
