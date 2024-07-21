@@ -1,4 +1,3 @@
-// import { useSocketContext } from "../../frontend/src/context/SocketContext.jsx";
 import CodeBlock from "../models/codeBlock.js";
 import { io, server } from "../socket/socket.js";
 
@@ -63,17 +62,14 @@ export const updateCodeBlock = async (req, res) => {
         const id = req.params.id;
         const updateData = req.body; // Data to update the code block
         const updatedCodeBlock = await CodeBlock.findOneAndUpdate({ _id: id }, updateData, { new: true });
+        const { onlineUsers } = useSocketContext();
 
         if (!updatedCodeBlock) {
             return res.status(404).json({ message: 'Code block not found' });
         }
 
-        // socket.on("getOnlineUsers", (user) => {
-        //     console.log("getOnlineUsers:" ,user);
-        //     io.to(user._id).emit("updateCodeBlock", updatedCodeBlock);
-        // });
-
         io.emit("updateCodeBlock", updatedCodeBlock);
+
 
         res.status(200).json(updatedCodeBlock);
     } catch (error) {

@@ -9,8 +9,8 @@ import "highlight.js/styles/default.css";
 import useUpdateCodeBlack from "../../hooks/useUpdateCodeBlock.js";
 import toast from "react-hot-toast";
 import "bootstrap/dist/css/bootstrap.min.css";
-import useListenCodeBlocks from "../../hooks/useListenCodeBlocks.js";
 import { useSocketContext } from "../../context/SocketContext.jsx";
+
 
 const Home = () => {
   const { codeBlocks, setCodeBlocks } = useGetCodeBlocks();
@@ -68,7 +68,6 @@ const Home = () => {
 
       <Dropdown>
         <Dropdown.Toggle id="dropdown-basic">{placeholder}</Dropdown.Toggle>
-
         <Dropdown.Menu>
           {codeBlocks.map((codeBlock, idx) => (
             <Dropdown.Item
@@ -101,7 +100,6 @@ const Home = () => {
                 cols="150"
                 style={{ whiteSpace: "pre", fontFamily: "monospace" }}
               />
-
               <div>
                 <Button onClick={handleUpdate}> Update Code </Button>
                 <Button variant="danger" onClick={() => setEditMode(!editMode)}>
@@ -109,6 +107,7 @@ const Home = () => {
                   Cancel{" "}
                 </Button>
               </div>
+
             </div>
           ) : (
             <div onClick={() => setEditMode(!editMode)}>

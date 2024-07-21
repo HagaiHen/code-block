@@ -11,12 +11,13 @@ const PORT = process.env.PORT || 4000;
 
 app.use(express.json()); // to parse the imcoming requests with JSON payloads (req.body)
 app.use(cookieParser());
+
 app.use("/api/auth", authRoutes);
 app.use("/api/codeblocks", codeBlocksRoutes);
 
-app.get("/", (req, res) => {
-    res.send('Hello World!');
-});
+// app.get("/", (req, res) => {
+//     res.send('Hello World!');
+// });
 
 server.listen(PORT, () => {
     connectToMongoDB();
