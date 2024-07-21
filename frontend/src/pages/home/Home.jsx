@@ -9,6 +9,7 @@ import "highlight.js/styles/default.css";
 import useUpdateCodeBlack from "../../hooks/useUpdateCodeBlock.js";
 import toast from "react-hot-toast";
 import "bootstrap/dist/css/bootstrap.min.css";
+import useListenCodeBlocks from "../../hooks/useListenCodeBlocks.js";
 
 const Home = () => {
   const { codeBlocks, setCodeBlocks } = useGetCodeBlocks();
@@ -17,6 +18,7 @@ const Home = () => {
   const [currCodeBlock, setCurrCodeBlock] = useState(null);
   const { updateCodeBlock } = useUpdateCodeBlack();
   const [editMode, setEditMode] = useState(false);
+  useListenCodeBlocks();
 
   const handleSelect = (e) => {
     setPlaceholder(e.title);
@@ -47,7 +49,7 @@ const Home = () => {
       <h3>Choose Code Block: </h3>
 
       <Dropdown>
-        <Dropdown.Toggle variant="success" id="dropdown-basic">
+        <Dropdown.Toggle id="dropdown-basic">
           {placeholder}
         </Dropdown.Toggle>
 
@@ -67,10 +69,11 @@ const Home = () => {
       {currCodeBlock && (
         <div>
           {currCodeBlock.mentorId !== authUser._id ? (
-            <h5> Edit premission </h5>
+            <Button variant="success"> Edit Premission </Button>
           ) : (
-            <h5> View premission </h5>
+            <Button variant="danger"> View Premission</Button>
           )}
+
           {currCodeBlock.mentorId !== authUser._id && editMode ? (
             <div style={{ flexDirection: "column" }}>
               <textarea
@@ -82,7 +85,12 @@ const Home = () => {
                 cols="150"
                 style={{ whiteSpace: "pre", fontFamily: "monospace" }}
               />
+              
+            
+            <div>
               <Button onClick={handleUpdate}> Update Code </Button>
+              <Button variant="danger" onClick={() => setEditMode(!editMode)}> Cancel </Button>
+            </div>
             </div>
           ) : (
             <div onClick={() => setEditMode(!editMode)}>
