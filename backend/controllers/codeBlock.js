@@ -30,17 +30,14 @@ export const createCodeBlock = async (req, res) => {
 
 export const getCodeBlocks = async (req, res) => {
     try {
-        const { id: userToChatId } = req.params;
-        const senderId = req.user._id;
+        
+        const codeBlocks = await CodeBlock.find({});
 
-        const conversation = await Conversation.findOne({
-			participants: { $all: [senderId, userToChatId] },
-		}).populate("messages"); // NOT REFERENCE BUT ACTUAL MESSAGES
+        if (!codeBlocks) return res.status(200).json([]);
+        res.status(200).json(codeBlocks);
 
-        if (!conversation) return res.status(200).json([]);
-        res.status(200).json(conversation.messages);
     } catch (error) {
-        console.log("error getting messages: ", error.message);
+        console.log("error getting code blocks: ", error.message);
         res.status(500).send({ error: "Internal server error" });
     }
 };
