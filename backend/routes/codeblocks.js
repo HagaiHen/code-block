@@ -1,6 +1,6 @@
 import express from 'express';
 import { createCodeBlock, getCodeBlocks, getCodeBlock, updateCodeBlock } from "../controllers/codeBlock.js";
-import { protectRoute } from '../utils/middleware/protectRoute.js';
+import { protectRoute } from '../middleware/protectRoute.js';
 
 const router = express.Router();
 

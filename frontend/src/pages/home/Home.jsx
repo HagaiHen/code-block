@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
 import useGetCodeBlocks from "../../hooks/useGetCodeBlocks.js";
@@ -9,6 +9,8 @@ import "highlight.js/styles/default.css";
 import useUpdateCodeBlack from "../../hooks/useUpdateCodeBlock.js";
 import toast from "react-hot-toast";
 import "bootstrap/dist/css/bootstrap.min.css";
+import useListenCodeBlocks from "../../hooks/useListenCodeBlocks.js";
+import { useSocketContext } from "../../context/SocketContext.jsx";
 
 const Home = () => {
   const { codeBlocks, setCodeBlocks } = useGetCodeBlocks();
@@ -17,6 +19,7 @@ const Home = () => {
   const [currCodeBlock, setCurrCodeBlock] = useState(null);
   const { updateCodeBlock } = useUpdateCodeBlack();
   const [editMode, setEditMode] = useState(false);
+  const { socket } = useSocketContext();
 
   const handleSelect = (e) => {
     setPlaceholder(e.title);
@@ -42,14 +45,29 @@ const Home = () => {
     }
   };
 
+  useEffect(() => {
+    const handleUpdateCodeBlock = async (codeBlock) => {
+      setCodeBlocks((prevCodeBlocks) =>
+        prevCodeBlocks.map((cb) => (cb._id === codeBlock._id ? codeBlock : cb))
+      );
+      if (currCodeBlock?._id === codeBlock._id) {
+        setCurrCodeBlock(codeBlock);
+      }
+    };
+
+    socket?.on("updateCodeBlock", handleUpdateCodeBlock);
+
+    return () => {
+      socket?.off("updateCodeBlock", handleUpdateCodeBlock);
+    };
+  }, [socket, currCodeBlock]);
+
   return (
     <Container>
       <h3>Choose Code Block: </h3>
 
       <Dropdown>
-        <Dropdown.Toggle variant="success" id="dropdown-basic">
-          {placeholder}
-        </Dropdown.Toggle>
+        <Dropdown.Toggle id="dropdown-basic">{placeholder}</Dropdown.Toggle>
 
         <Dropdown.Menu>
           {codeBlocks.map((codeBlock, idx) => (
@@ -67,10 +85,11 @@ const Home = () => {
       {currCodeBlock && (
         <div>
           {currCodeBlock.mentorId !== authUser._id ? (
-            <h5> Edit premission </h5>
+            <Button variant="success"> Edit Premission </Button>
           ) : (
-            <h5> View premission </h5>
+            <Button variant="danger"> View Premission</Button>
           )}
+
           {currCodeBlock.mentorId !== authUser._id && editMode ? (
             <div style={{ flexDirection: "column" }}>
               <textarea
@@ -82,7 +101,14 @@ const Home = () => {
                 cols="150"
                 style={{ whiteSpace: "pre", fontFamily: "monospace" }}
               />
-              <Button onClick={handleUpdate}> Update Code </Button>
+
+              <div>
+                <Button onClick={handleUpdate}> Update Code </Button>
+                <Button variant="danger" onClick={() => setEditMode(!editMode)}>
+                  {" "}
+                  Cancel{" "}
+                </Button>
+              </div>
             </div>
           ) : (
             <div onClick={() => setEditMode(!editMode)}>
