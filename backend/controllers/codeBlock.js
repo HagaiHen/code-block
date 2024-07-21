@@ -1,6 +1,5 @@
-import { useSocketContext } from "../../frontend/src/context/SocketContext.jsx";
 import CodeBlock from "../models/codeBlock.js";
-import { getSocketId } from "../socket/socket.js";
+import { io, server } from "../socket/socket.js";
 
 export const createCodeBlock = async (req, res) => {
     try {
@@ -69,11 +68,8 @@ export const updateCodeBlock = async (req, res) => {
             return res.status(404).json({ message: 'Code block not found' });
         }
 
-        onlineUsers.map((user) => {
-            // ignore my self.
-            console.log(user);
-            io.to(getSocketId(user._id).emit("updateCodeBlock", updatedCodeBlock));
-        })
+        io.emit("updateCodeBlock", updatedCodeBlock);
+
 
         res.status(200).json(updatedCodeBlock);
     } catch (error) {

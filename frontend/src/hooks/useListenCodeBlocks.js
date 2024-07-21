@@ -4,15 +4,22 @@ import useUpdateCodeBlock from './useUpdateCodeBlock';
 
 
 const useListenCodeBlocks = () => {
-  const {socket} = useSocketContext();
-  const { updateCodeBlock } = useUpdateCodeBlock();
+  
+    const { socket, io } = useSocketContext();
+    const { updateCodeBlock } = useUpdateCodeBlock();
 
-  useEffect(() => {
-    socket?.on('updateCodeBlock', async (codeBlock) => {
-        await updateCodeBlock(codeBlock);
-  });
-  return () => socket?.off('updateCodeBlock');
-  }, [socket, updateCodeBlock]);
+
+    useEffect(() => {
+        const handleUpdateCodeBlock = async (codeBlock) => {
+            await updateCodeBlock(codeBlock);
+        };
+    
+        socket?.on('updateCodeBlock', handleUpdateCodeBlock);
+        
+        return () => {
+            socket?.off('updateCodeBlock', handleUpdateCodeBlock);
+        };
+    }, [socket, updateCodeBlock]);
 }
 
-export default useListenCodeBlocks
+export default useListenCodeBlocks;
