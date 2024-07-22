@@ -43,6 +43,12 @@ const Home = () => {
     }
   };
 
+  const handleContainerClick = () => {
+    if (editMode) {
+      setEditMode(false);
+    }
+  }
+
   useEffect(() => {
     const handleUpdateCodeBlock = async (codeBlock) => {
       setCodeBlocks((prevCodeBlocks) =>
@@ -61,7 +67,7 @@ const Home = () => {
   }, [socket, currCodeBlock]);
 
   return (
-    <Container>
+    <Container onClick={handleContainerClick}>
       <h3>Code Block App</h3>
       <CodeBlockDropdown
         placeholder={placeholder}
