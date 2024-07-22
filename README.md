@@ -88,5 +88,5 @@ The backend server will start and listen on the specified port (default: 5000). 
 The frontend communicates with the backend in real-time using Socket.IO. This allows for instant updates and dynamic interactions within the application.
 
 ## Usage
-### 1. Login: Navigate to /login to log in to the application.
-### 2. Home: Once logged in, navigate to / to access the home page where you can select, view, and update code blocks.
+#### 1. Login: Navigate to /login to log in to the application.
+#### 2. Home: Once logged in, navigate to / to access the home page where you can select, view, and update code blocks.
