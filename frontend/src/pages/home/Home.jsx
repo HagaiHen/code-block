@@ -43,6 +43,8 @@ const Home = () => {
 
   //check code correctness
   useEffect(() => {
+    // for first time rendering
+    if (!currCodeBlock) return;
     const isCorrect = currCodeBlock?.code === currCodeBlock?.solution;
 
     if (isCorrect) {
