@@ -2,7 +2,7 @@ import User from '../models/user.js';
 import bcrypt from 'bcryptjs';
 import generateToken from '../utils/generateToken.js';
 
-
+// Handling signup
 export const signup = async (req, res) => {
     try {
         const { username, password, confirmPassword } = req.body;
@@ -11,6 +11,7 @@ export const signup = async (req, res) => {
             return res.status(400).send({ error: 'Passwords do not match' });
         }
 
+        //check for duplicate username
         const user = await User.findOne({ username });
         if (user) {
             return res.status(400).send({ error: 'User already exists' });
@@ -42,10 +43,12 @@ export const signup = async (req, res) => {
     }
 };
 
+//Handling login
 export const login = async (req, res) => {
     try {
         const { username, password } = req.body;
         const user = await User.findOne({ username });
+        //check if the password is correct
         const isMatch = await bcrypt.compare(password, user?.password || "");
         if (!user || !isMatch) {
             return res.status(400).send({ error: 'Invalid username or password' });
@@ -65,8 +68,10 @@ export const login = async (req, res) => {
     }
 };
 
+// Handling logout
 export const logout = async (req, res) => {
     try {
+        // delete the token from the cookie
         res.cookie("jwt", "", { maxAge: 0 });
         res.status(200).json({ message: 'Logged out successfully' });
     } catch (err) {

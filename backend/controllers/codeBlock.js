@@ -1,6 +1,7 @@
 import CodeBlock from "../models/codeBlock.js";
 import { io } from "../socket/socket.js";
 
+// Create a new code block
 export const createCodeBlock = async (req, res) => {
     try {
         const { title, code, solution } = req.body;
@@ -30,6 +31,7 @@ export const createCodeBlock = async (req, res) => {
     }
 };
 
+// Get all the code blocks
 export const getCodeBlocks = async (req, res) => {
     try {
 
@@ -44,6 +46,7 @@ export const getCodeBlocks = async (req, res) => {
     }
 };
 
+// Get a specific code block by id
 export const getCodeBlock = async (req, res) => {
     try {
         const id = req.params.id;
@@ -58,18 +61,19 @@ export const getCodeBlock = async (req, res) => {
     }
 };
 
+// Update a specific code block by id
 export const updateCodeBlock = async (req, res) => {
     try {
         const id = req.params.id;
-        const updateData = req.body; // Data to update the code block
+        const updateData = req.body;
         const updatedCodeBlock = await CodeBlock.findOneAndUpdate({ _id: id }, updateData, { new: true });
 
         if (!updatedCodeBlock) {
             return res.status(404).json({ message: 'Code block not found' });
         }
 
+        //io.emit() send "updateCodeBlock" event to all connected clients
         io.emit("updateCodeBlock", updatedCodeBlock);
-
 
         res.status(200).json(updatedCodeBlock);
     } catch (error) {

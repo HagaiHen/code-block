@@ -3,16 +3,17 @@ import User from '../models/user.js';
 
 export const protectRoute = async (req, res, next) => {
     try {
+        // Extract token from the request header
         const token = req.cookies.jwt;
         if (!token) {
             return res.status(401).json({ message: 'No token, authorization denied' });
         }
-
+        // Verify token, match to this user
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         if (!decoded) {
             return res.status(401).json({ message: 'Invalid token, authorization denied' });
         }
-
+        // get the user without password
         const user = await User.findById(decoded.userId).select('-password');
         if (!user) {
             return res.status(401).json({ message: 'User not found, authorization denied' });

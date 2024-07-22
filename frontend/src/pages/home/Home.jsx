@@ -19,7 +19,7 @@ const Home = () => {
   const { updateCodeBlock } = useUpdateCodeBlack();
   const [editMode, setEditMode] = useState(false);
   const { socket } = useSocketContext();
-  const [showEmoji, setShowEmoji] = useState(true);
+  const [showEmoji, setShowEmoji] = useState(false);
 
   const handleSelect = (e) => {
     setPlaceholder(e.title);
@@ -75,6 +75,7 @@ const Home = () => {
   return (
     <Container>
       <h3>Code Block App</h3>
+      <h5>Wellcome, {authUser?.username}</h5>
       <CodeBlockDropdown
         placeholder={placeholder}
         codeBlocks={codeBlocks}
