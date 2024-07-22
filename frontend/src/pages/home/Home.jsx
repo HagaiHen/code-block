@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from "react";
-import Button from "react-bootstrap/Button";
-import Dropdown from "react-bootstrap/Dropdown";
-import useGetCodeBlocks from "../../hooks/useGetCodeBlocks.js";
-import { Container } from "./styles.jsx";
-import { useAuthContext } from "../../context/useAuthContext.jsx";
-import Highlight from "react-highlight";
-import "highlight.js/styles/default.css";
-import useUpdateCodeBlack from "../../hooks/useUpdateCodeBlock.js";
-import toast from "react-hot-toast";
+import { useState, useEffect } from "react";
+import { Container } from "./styles";
+import { useAuthContext } from "../../context/useAuthContext";
+import useGetCodeBlocks from "../../hooks/useGetCodeBlocks";
+import useUpdateCodeBlack from "../../hooks/useUpdateCodeBlock";
+import { useSocketContext } from "../../context/SocketContext";
+import CodeBlockDropdown from "../../components/CodeBlockDropDown";
+import CodeBlockEditor from "../../components/CodeBlockEditor";
+import CodeBlockViewer from "../../components/CodeBlockViewer";
+import Button from "react-bootstrap/esm/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useSocketContext } from "../../context/SocketContext.jsx";
-
 
 const Home = () => {
   const { codeBlocks, setCodeBlocks } = useGetCodeBlocks();
@@ -64,61 +62,33 @@ const Home = () => {
 
   return (
     <Container>
-      <h3>Choose Code Block: </h3>
-
-      <Dropdown>
-        <Dropdown.Toggle id="dropdown-basic">{placeholder}</Dropdown.Toggle>
-        <Dropdown.Menu>
-          {codeBlocks.map((codeBlock, idx) => (
-            <Dropdown.Item
-              key={codeBlock._id}
-              onClick={() => handleSelect(codeBlock)}
-            >
-              {" "}
-              {codeBlock.title}{" "}
-            </Dropdown.Item>
-          ))}
-        </Dropdown.Menu>
-      </Dropdown>
+      <h3>Code Block App</h3>
+      <CodeBlockDropdown
+        placeholder={placeholder}
+        codeBlocks={codeBlocks}
+        handleSelect={handleSelect}
+      />
 
       {currCodeBlock && (
         <div>
           {currCodeBlock.mentorId !== authUser._id ? (
-            <Button variant="success"> Edit Premission </Button>
+            <Button variant="success" style={{ pointerEvents: "none", fontSize: "small" }}> Edit Permission </Button>
           ) : (
-            <Button variant="danger"> View Premission</Button>
+            <Button variant="danger" style={{ pointerEvents: "none", fontSize: "small" }}> View Permission</Button>
           )}
 
           {currCodeBlock.mentorId !== authUser._id && editMode ? (
-            <div style={{ flexDirection: "column" }}>
-              <textarea
-                value={currCodeBlock.code}
-                onChange={(e) =>
-                  setCurrCodeBlock({ ...currCodeBlock, code: e.target.value })
-                }
-                style={{
-                  width: "150vh",
-                  height: "70vh",
-                  whiteSpace: "pre",
-                  fontFamily: "monospace",
-                  boxSizing: "border-box",
-                }}
-              />
-              <div>
-                <Button onClick={handleUpdate}> Update Code </Button>
-                <Button variant="danger" onClick={() => setEditMode(!editMode)}>
-                  {" "}
-                  Cancel{" "}
-                </Button>
-              </div>
-
-            </div>
+            <CodeBlockEditor
+              currCodeBlock={currCodeBlock}
+              setCurrCodeBlock={setCurrCodeBlock}
+              handleUpdate={handleUpdate}
+              setEditMode={setEditMode}
+            />
           ) : (
-            <div onClick={() => setEditMode(!editMode)}>
-              <Highlight className="language-javascript">
-                {currCodeBlock.code}
-              </Highlight>
-            </div>
+            <CodeBlockViewer
+              code={currCodeBlock.code}
+              setEditMode={setEditMode}
+            />
           )}
         </div>
       )}
