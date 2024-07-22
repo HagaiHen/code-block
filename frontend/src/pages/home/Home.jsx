@@ -9,6 +9,7 @@ import CodeBlockEditor from "../../components/CodeBlockEditor";
 import CodeBlockViewer from "../../components/CodeBlockViewer";
 import Button from "react-bootstrap/esm/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "./emoji.css";
 
 const Home = () => {
   const { codeBlocks, setCodeBlocks } = useGetCodeBlocks();
@@ -18,6 +19,7 @@ const Home = () => {
   const { updateCodeBlock } = useUpdateCodeBlack();
   const [editMode, setEditMode] = useState(false);
   const { socket } = useSocketContext();
+  const [showEmoji, setShowEmoji] = useState(true);
 
   const handleSelect = (e) => {
     setPlaceholder(e.title);
@@ -43,11 +45,15 @@ const Home = () => {
     }
   };
 
-  const handleContainerClick = () => {
-    if (editMode) {
-      setEditMode(false);
+  //check code correctness
+  useEffect(() => {
+    const isCorrect = currCodeBlock?.code === currCodeBlock?.solution;
+
+    if (isCorrect) {
+      setShowEmoji(true);
+      setTimeout(() => setShowEmoji(false), 3000); // Show emoji for 3 seconds
     }
-  }
+  }, [currCodeBlock]);
 
   useEffect(() => {
     const handleUpdateCodeBlock = async (codeBlock) => {
@@ -67,7 +73,7 @@ const Home = () => {
   }, [socket, currCodeBlock]);
 
   return (
-    <Container onClick={handleContainerClick}>
+    <Container>
       <h3>Code Block App</h3>
       <CodeBlockDropdown
         placeholder={placeholder}
@@ -78,9 +84,21 @@ const Home = () => {
       {currCodeBlock && (
         <div>
           {currCodeBlock.mentorId !== authUser._id ? (
-            <Button variant="success" style={{ pointerEvents: "none", fontSize: "small" }}> Edit Permission </Button>
+            <Button
+              variant="success"
+              style={{ pointerEvents: "none", fontSize: "small" }}
+            >
+              {" "}
+              Edit Permission{" "}
+            </Button>
           ) : (
-            <Button variant="danger" style={{ pointerEvents: "none", fontSize: "small" }}> View Permission</Button>
+            <Button
+              variant="danger"
+              style={{ pointerEvents: "none", fontSize: "small" }}
+            >
+              {" "}
+              View Permission
+            </Button>
           )}
 
           {currCodeBlock.mentorId !== authUser._id && editMode ? (
@@ -96,6 +114,7 @@ const Home = () => {
               setEditMode={setEditMode}
             />
           )}
+          {showEmoji && <div className="emoji-overlay">✅</div>}
         </div>
       )}
     </Container>

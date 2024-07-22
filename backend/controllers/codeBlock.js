@@ -3,7 +3,7 @@ import { io } from "../socket/socket.js";
 
 export const createCodeBlock = async (req, res) => {
     try {
-        const { title, code } = req.body;
+        const { title, code, solution } = req.body;
         const user = req.user;
 
         if (!title || !code) {
@@ -13,7 +13,8 @@ export const createCodeBlock = async (req, res) => {
         const newCodeBlock = new CodeBlock({
             mentorId: user._id,
             title: title,
-            code: code
+            code: code,
+            solution: solution
         })
 
         if (!newCodeBlock) {
