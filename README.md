@@ -2,7 +2,8 @@
 
 ## Overview
 
-This project is a full-stack application for managing code blocks, built with Node.js, Express, MongoDB on the backend, and React on the frontend. It includes user authentication, CRUD operations for code blocks, and real-time updates via Socket.IO.
+This project is a full-stack application for managing code blocks, designed to facilitate remote mentoring sessions. The application allows a mentor to share a piece of code with a student, observe real-time changes made by the student, and provide feedback. The backend is built with Node.js, Express, and MongoDB, while the frontend is developed using React. Real-time communication is handled using Socket.IO.
+
 
 ## Features
 
