@@ -96,9 +96,13 @@ const Home = () => {
                 onChange={(e) =>
                   setCurrCodeBlock({ ...currCodeBlock, code: e.target.value })
                 }
-                rows="20"
-                cols="150"
-                style={{ whiteSpace: "pre", fontFamily: "monospace" }}
+                style={{
+                  width: "150vh",
+                  height: "70vh",
+                  whiteSpace: "pre",
+                  fontFamily: "monospace",
+                  boxSizing: "border-box",
+                }}
               />
               <div>
                 <Button onClick={handleUpdate}> Update Code </Button>
