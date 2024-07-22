@@ -7,6 +7,7 @@ const useLogin = () => {
   const [loading, setLoading] = useState(false);
   const { authUser, setAuthUser } = useAuthContext();
 
+  // Function to handle user login
   const login = async (username, password) => {
 
     const isValid = handleInputErrors({ username, password });
@@ -22,11 +23,12 @@ const useLogin = () => {
         body: JSON.stringify({ username, password }),
       })
 
-      const data = await res.json();
+      const data = await res.json(); // Parse JSON response from the server
       if (data.error) {
         throw new Error(data.error);
       }
 
+      // Store authentication data in local storage
       localStorage.setItem("authUser", JSON.stringify(data));
       setAuthUser(data);
 
@@ -48,6 +50,5 @@ function handleInputErrors({ username, password }) {
     toast.error("please fill all fields");
     return false;
   }
-
   return true;
 }

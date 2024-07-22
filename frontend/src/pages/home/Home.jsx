@@ -27,6 +27,7 @@ const Home = () => {
   };
 
   const handleUpdate = async () => {
+    // check that the current user is authorized to edit the code block
     if (authUser._id === currCodeBlock?.mentorId) {
       console.log("You do not have permission to update this code block.");
       return;
@@ -34,11 +35,6 @@ const Home = () => {
     setEditMode(!editMode);
     try {
       await updateCodeBlock(currCodeBlock);
-      setCodeBlocks(
-        codeBlocks.map((cb) =>
-          cb._id === currCodeBlock._id ? currCodeBlock : cb
-        )
-      );
     } catch (error) {
       console.log("Error updating code block:", error.message);
       toast.error("Failed to update code block");
@@ -57,6 +53,7 @@ const Home = () => {
 
   useEffect(() => {
     const handleUpdateCodeBlock = async (codeBlock) => {
+      // Update code blocks list with updated code
       setCodeBlocks((prevCodeBlocks) =>
         prevCodeBlocks.map((cb) => (cb._id === codeBlock._id ? codeBlock : cb))
       );
@@ -65,9 +62,11 @@ const Home = () => {
       }
     };
 
+    // Add event listener for updating code block on server
     socket?.on("updateCodeBlock", handleUpdateCodeBlock);
 
     return () => {
+      // Remove event listener for updating code block on server, cleanup function
       socket?.off("updateCodeBlock", handleUpdateCodeBlock);
     };
   }, [socket, currCodeBlock]);

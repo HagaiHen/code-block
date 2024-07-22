@@ -14,6 +14,7 @@ export const SocketContextProvider = ({ children }) => {
   const { authUser } = useAuthContext();
 
   useEffect(() => {
+    // Set up the socket if there is an authenticated user
     if (authUser) {
       const socket = io("http://localhost:5000", {
         query: {
@@ -23,11 +24,12 @@ export const SocketContextProvider = ({ children }) => {
 
       setSocket(socket);
 
-      // socket.on() is used to listen to the events. can be used both on client and server side
+      // Listen for the 'getOnlineUsers' event from the server
       socket.on("getOnlineUsers", (users) => {
         setOnlineUsers(users);
       });
 
+      // When the component unmounts, close the socket connection
       return () => socket.close();
     } else {
       if (socket) {
@@ -38,6 +40,7 @@ export const SocketContextProvider = ({ children }) => {
   }, [authUser]);
 
   return (
+    // Provide the socket and onlineUsers to the rest of the app
     <SocketContext.Provider value={{ socket, onlineUsers }}>
       {children}
     </SocketContext.Provider>

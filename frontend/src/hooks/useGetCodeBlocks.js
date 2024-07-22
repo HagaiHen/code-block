@@ -6,12 +6,12 @@ const useGetCodeBlocks = () => {
     const [codeBlocks, setCodeBlocks] = useState([]);
 
     useEffect(() => {
+        // Function to fetch code blocks from the server
         const getCodeBlocks = async () => {
             try {
                 setLoading(true);
                 const response = await fetch(`/api/codeblocks/get`);
                 const data = await response.json();
-                console.log("data: get code blocks", data);
                 if (data.error) {
                     throw new Error(data.error);
                 }
@@ -27,7 +27,7 @@ const useGetCodeBlocks = () => {
 
         }
         getCodeBlocks();
-    }, [setCodeBlocks]);
+    }, [setCodeBlocks]); // runs when setCodeBlocks changes
     return { codeBlocks, setCodeBlocks, loading };
 }
 
