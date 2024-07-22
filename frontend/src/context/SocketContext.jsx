@@ -16,7 +16,7 @@ export const SocketContextProvider = ({ children }) => {
   useEffect(() => {
     // Set up the socket if there is an authenticated user
     if (authUser) {
-      const socket = io("http://localhost:5000", {
+      const socket = io("https://code-block-wh41.onrender.com", {
         query: {
           userId: authUser._id,
         },
