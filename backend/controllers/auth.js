@@ -12,7 +12,7 @@ export const signup = async (req, res) => {
         }
 
         //check for duplicate username
-        const user = await User.findOne({ username });
+        const user = await User.findOne({ username: new RegExp('^' + username + '$', 'i') });
         if (user) {
             return res.status(400).send({ error: 'User already exists' });
         }
@@ -24,7 +24,7 @@ export const signup = async (req, res) => {
         });
 
         await newUser.save();
-
+        
         if (!newUser) {
             return res.status(400).send({ error: 'Failed to save user' });
         }
@@ -47,7 +47,7 @@ export const signup = async (req, res) => {
 export const login = async (req, res) => {
     try {
         const { username, password } = req.body;
-        const user = await User.findOne({ username });
+        const user = await User.findOne({ username: new RegExp('^' + username + '$', 'i') });
         //check if the password is correct
         const isMatch = await bcrypt.compare(password, user?.password || "");
         if (!user || !isMatch) {
@@ -56,7 +56,7 @@ export const login = async (req, res) => {
 
         // generate token here
         generateToken(user._id, res);
-
+        
         res.status(200).json({
             _id: user._id,
             username: user.username,
