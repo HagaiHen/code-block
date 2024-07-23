@@ -1,7 +1,15 @@
 import React from "react";
 import Button from "react-bootstrap/Button";
+import useGetCodeBlock from "../hooks/useGetCodeBlock";
 
 const CodeBlockEditor = ({ currCodeBlock, setCurrCodeBlock, handleUpdate, setEditMode }) => {
+  const { codeBlock } = useGetCodeBlock(currCodeBlock._id);
+  const handleCancel = () => {
+    setEditMode(false);
+    if (currCodeBlock.code !== codeBlock.code) {
+      setCurrCodeBlock(codeBlock);
+    }
+  };
   return (
     <div style={{ flexDirection: "column" }}>
       <textarea
@@ -19,7 +27,7 @@ const CodeBlockEditor = ({ currCodeBlock, setCurrCodeBlock, handleUpdate, setEdi
       />
       <div>
         <Button onClick={handleUpdate}> Update Code </Button>
-        <Button variant="danger" onClick={() => setEditMode(false)}> Cancel </Button>
+        <Button variant="danger" onClick={handleCancel}> Cancel </Button>
       </div>
     </div>
   );
