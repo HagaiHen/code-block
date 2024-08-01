@@ -9,13 +9,15 @@ const useGetCodeBlock = (codeBlockId) => {
         // Function to fetch code blocks from the server
         const getCodeBlock = async () => {
             try {
-                setLoading(true);
-                const response = await fetch(`/api/codeblocks/get/${codeBlockId}`);
-                const data = await response.json();
-                if (data.error) {
-                    throw new Error(data.error);
+                if (codeBlockId) {
+                    setLoading(true);
+                    const response = await fetch(`/api/codeblocks/get/${codeBlockId ? codeBlockId : ""}`);
+                    const data = await response.json();
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
+                    if (data) setCodeBlock(data);
                 }
-                if (data) setCodeBlock(data);
 
             } catch (error) {
                 console.log("Error getting code block:", error.message);
@@ -27,7 +29,7 @@ const useGetCodeBlock = (codeBlockId) => {
 
         }
         getCodeBlock();
-    }, [setCodeBlock]); // runs when setCodeBlock changes
+    }, [setCodeBlock, codeBlockId]); // runs when setCodeBlock changes
     return { codeBlock, setCodeBlock, loading };
 }
 

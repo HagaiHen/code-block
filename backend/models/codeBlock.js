@@ -2,8 +2,7 @@ import mongoose from "mongoose";
 
 const CodeBlockSchema = new mongoose.Schema({
     mentorId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        type: String,
         required: true
     },
     title: {

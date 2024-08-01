@@ -10,29 +10,38 @@ import CodeBlockViewer from "../../components/CodeBlockViewer";
 import Button from "react-bootstrap/esm/Button";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./emoji.css";
+import useGetCodeBlock from "../../hooks/useGetCodeBlock";
 
 const Home = () => {
   const { codeBlocks, setCodeBlocks } = useGetCodeBlocks();
-  const { authUser } = useAuthContext();
   const [placeholder, setPlaceholder] = useState("Choose Code Block");
-  const [currCodeBlock, setCurrCodeBlock] = useState(null);
+  const [currCodeBlock, setCurrCodeBlock] = useState();
   const { updateCodeBlock } = useUpdateCodeBlack();
   const [editMode, setEditMode] = useState(false);
   const { socket } = useSocketContext();
   const [showEmoji, setShowEmoji] = useState(false);
+  const { codeBlock, setCodeBlock } = useGetCodeBlock();
 
-  const handleSelect = (e) => {
+
+
+  const handleSelect = async (e) => {
     setPlaceholder(e.title);
+    setEditMode(false);
     setCurrCodeBlock(e);
+    
+    if (e.mentorId === "") {
+      var updatedCodeBlock = await updateCodeBlock({ ...e, mentorId: socket.id });
+    }
+    setCodeBlock(updatedCodeBlock)
   };
 
   const handleUpdate = async () => {
     // check that the current user is authorized to edit the code block
-    if (authUser._id === currCodeBlock?.mentorId) {
+    if (socket.id === currCodeBlock?.mentorId) {
       console.log("You do not have permission to update this code block.");
       return;
     }
-    setEditMode(!editMode);
+    setEditMode(false);
     try {
       await updateCodeBlock(currCodeBlock);
     } catch (error) {
@@ -76,7 +85,6 @@ const Home = () => {
   return (
     <Container>
       <h3>Code Block App</h3>
-      <h5>Wellcome, {authUser?.username}</h5>
       <CodeBlockDropdown
         placeholder={placeholder}
         codeBlocks={codeBlocks}
@@ -85,7 +93,7 @@ const Home = () => {
 
       {currCodeBlock && (
         <div>
-          {currCodeBlock.mentorId !== authUser._id ? (
+          {currCodeBlock.mentorId !== socket.id ? (
             <Button
               variant="success"
               style={{ pointerEvents: "none", fontSize: "small" }}
@@ -103,7 +111,7 @@ const Home = () => {
             </Button>
           )}
 
-          {currCodeBlock.mentorId !== authUser._id && editMode ? (
+          {currCodeBlock.mentorId !== socket.id && editMode ? (
             <CodeBlockEditor
               currCodeBlock={currCodeBlock}
               setCurrCodeBlock={setCurrCodeBlock}

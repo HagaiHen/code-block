@@ -1,6 +1,7 @@
 import { Server } from 'socket.io';
 import http from 'http';
 import express from 'express';
+import { removeMentorIdPremission } from '../utils/utils.js';
 
 const app = express();
 
@@ -31,10 +32,11 @@ io.on('connection', (socket) => {
 
 
     // socket.on() is used to listen to the event. used in both client and server
-    socket.on('disconnect', () => {
+    socket.on('disconnect', async () => {
         console.log('user disconnected', socket.id);
         delete userSocketMap[userId];
         io.emit("getOnlineUsers", Object.keys(userSocketMap));
+        await removeMentorIdPremission(socket.id);
     });
 })
 

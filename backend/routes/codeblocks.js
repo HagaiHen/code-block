@@ -4,9 +4,9 @@ import { protectRoute } from '../middleware/protectRoute.js';
 
 const router = express.Router();
 
-router.post('/create', protectRoute, createCodeBlock);
-router.get('/get', protectRoute, getCodeBlocks);
-router.get('/get/:id', protectRoute, getCodeBlock);
-router.put('/update/:id', protectRoute, updateCodeBlock);
+router.post('/create', createCodeBlock);
+router.get('/', getCodeBlocks);
+router.get('/get/:id', getCodeBlock);
+router.put('/update/:id', updateCodeBlock);
 
 export default router;

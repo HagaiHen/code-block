@@ -10,7 +10,7 @@ const useGetCodeBlocks = () => {
         const getCodeBlocks = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`/api/codeblocks/get`);
+                const response = await fetch(`/api/codeblocks/`);
                 const data = await response.json();
                 if (data.error) {
                     throw new Error(data.error);

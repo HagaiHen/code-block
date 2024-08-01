@@ -12,7 +12,7 @@ export const createCodeBlock = async (req, res) => {
         }
 
         const newCodeBlock = new CodeBlock({
-            mentorId: user._id,
+            mentorId: "",
             title: title,
             code: code,
             solution: solution
