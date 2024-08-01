@@ -15,29 +15,35 @@ import useGetCodeBlock from "../../hooks/useGetCodeBlock";
 const Home = () => {
   const { codeBlocks, setCodeBlocks } = useGetCodeBlocks();
   const [placeholder, setPlaceholder] = useState("Choose Code Block");
-  const [currCodeBlock, setCurrCodeBlock] = useState();
+  const [currCodeBlock, setCurrCodeBlock] = useState(null);
   const { updateCodeBlock } = useUpdateCodeBlack();
   const [editMode, setEditMode] = useState(false);
   const { socket } = useSocketContext();
   const [showEmoji, setShowEmoji] = useState(false);
-  const { codeBlock, setCodeBlock } = useGetCodeBlock();
-
-
+  const { setCodeBlock, getCodeBlock } = useGetCodeBlock(
+    currCodeBlock ? currCodeBlock._id : null
+  );
+  const [loading, setLoading] = useState(false);
 
   const handleSelect = async (e) => {
+    const res = await getCodeBlock(e._id)
+    setLoading(true);
     setPlaceholder(e.title);
     setEditMode(false);
-    setCurrCodeBlock(e);
-    
-    if (e.mentorId === "") {
-      var updatedCodeBlock = await updateCodeBlock({ ...e, mentorId: socket.id });
+    setCurrCodeBlock(res);
+
+    if (res.mentorId === "") {
+      const updatedCodeBlock = await updateCodeBlock({
+        ...e,
+        mentorId: socket.id,
+      });
+      setCodeBlock(updatedCodeBlock);
     }
-    setCodeBlock(updatedCodeBlock)
+    setLoading(false);
   };
 
   const handleUpdate = async () => {
-    // check that the current user is authorized to edit the code block
-    if (socket.id === currCodeBlock?.mentorId) {
+    if (socket.id !== currCodeBlock?.mentorId) {
       console.log("You do not have permission to update this code block.");
       return;
     }
@@ -50,34 +56,31 @@ const Home = () => {
     }
   };
 
-  //check code correctness
   useEffect(() => {
-    // for first time rendering
     if (!currCodeBlock) return;
-    const isCorrect = currCodeBlock?.code === currCodeBlock?.solution;
 
+    const isCorrect = currCodeBlock?.code === currCodeBlock?.solution;
     if (isCorrect) {
       setShowEmoji(true);
-      setTimeout(() => setShowEmoji(false), 3000); // Show emoji for 3 seconds
+      setTimeout(() => setShowEmoji(false), 3000);
     }
   }, [currCodeBlock]);
 
   useEffect(() => {
-    const handleUpdateCodeBlock = async (codeBlock) => {
-      // Update code blocks list with updated code
+    const handleUpdateCodeBlock = (updatedCodeBlock) => {
       setCodeBlocks((prevCodeBlocks) =>
-        prevCodeBlocks.map((cb) => (cb._id === codeBlock._id ? codeBlock : cb))
+        prevCodeBlocks.map((cb) =>
+          cb._id === updatedCodeBlock._id ? updatedCodeBlock : cb
+        )
       );
-      if (currCodeBlock?._id === codeBlock._id) {
-        setCurrCodeBlock(codeBlock);
+      if (currCodeBlock?._id === updatedCodeBlock._id) {
+        setCurrCodeBlock(updatedCodeBlock);
       }
     };
 
-    // Add event listener for updating code block on server
     socket?.on("updateCodeBlock", handleUpdateCodeBlock);
 
     return () => {
-      // Remove event listener for updating code block on server, cleanup function
       socket?.off("updateCodeBlock", handleUpdateCodeBlock);
     };
   }, [socket, currCodeBlock]);
@@ -91,7 +94,7 @@ const Home = () => {
         handleSelect={handleSelect}
       />
 
-      {currCodeBlock && (
+      {currCodeBlock && !loading && (
         <div>
           {currCodeBlock.mentorId !== socket.id ? (
             <Button
@@ -107,7 +110,7 @@ const Home = () => {
               style={{ pointerEvents: "none", fontSize: "small" }}
             >
               {" "}
-              View Permission
+              View Permission{" "}
             </Button>
           )}
 
@@ -124,7 +127,7 @@ const Home = () => {
               setEditMode={setEditMode}
             />
           )}
-          {showEmoji && <div className="emoji-overlay">✅</div>}
+          {showEmoji && !editMode && <div className="emoji-overlay">✅</div>}
         </div>
       )}
     </Container>

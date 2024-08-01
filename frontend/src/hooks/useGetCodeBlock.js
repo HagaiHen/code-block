@@ -1,22 +1,26 @@
 import toast from 'react-hot-toast';
 import { useEffect, useState } from 'react';
 
-const useGetCodeBlock = (codeBlockId) => {
+const useGetCodeBlock = () => {
     const [loading, setLoading] = useState(false);
-    const [codeBlock, setCodeBlock] = useState([]);
+    const [codeBlock, setCodeBlock] = useState();
 
-    useEffect(() => {
-        // Function to fetch code blocks from the server
-        const getCodeBlock = async () => {
+    // useEffect(() => {
+    //     // Function to fetch code blocks from the server
+        const getCodeBlock = async (id) => {
             try {
-                if (codeBlockId) {
+                if (id) {
+                    console.log("getcodeblock()", id)
                     setLoading(true);
-                    const response = await fetch(`/api/codeblocks/get/${codeBlockId ? codeBlockId : ""}`);
+                    const response = await fetch(`/api/codeblocks/get/${id}`);
                     const data = await response.json();
                     if (data.error) {
                         throw new Error(data.error);
                     }
-                    if (data) setCodeBlock(data);
+                    if (data) {
+                        setCodeBlock(data);
+                        return data
+                    }
                 }
 
             } catch (error) {
@@ -28,9 +32,9 @@ const useGetCodeBlock = (codeBlockId) => {
             };
 
         }
-        getCodeBlock();
-    }, [setCodeBlock, codeBlockId]); // runs when setCodeBlock changes
-    return { codeBlock, setCodeBlock, loading };
+    //     getCodeBlock();
+    // }, [setCodeBlock, codeBlockId]); // runs when setCodeBlock and codeBlockId changes
+    return { codeBlock, setCodeBlock, getCodeBlock, loading };
 }
 
 export default useGetCodeBlock;
