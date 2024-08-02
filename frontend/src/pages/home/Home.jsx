@@ -25,8 +25,8 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
 
   const handleSelect = async (e) => {
-    const res = await getCodeBlock(e._id);
     setLoading(true);
+    const res = await getCodeBlock(e._id);
     setPlaceholder(e.title);
     setEditMode(false);
     setCurrCodeBlock(res);
