@@ -1,0 +1,56 @@
+.code-block-editor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    box-sizing: border-box;
+    width: 90vw;
+  }
+  
+  .code-block-editor-textarea {
+    width: 100%; /* Use a percentage to make it responsive */
+    height: 50vh;
+    white-space: pre;
+    font-family: Courier;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    background: #f3f3f3;
+    color: #444;
+    font-style: italic;
+    /* font-weight: 100; */
+  }
+  
+  .code-block-editor-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  /* Media queries for responsiveness */
+  @media (max-width: 1024px) {
+    .code-block-editor-textarea {
+      width: 90%;
+      height: 40vh;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .code-block-editor-textarea {
+      width: 95%;
+      height: 40vh;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .code-block-editor-textarea {
+      width: 100%;
+      height: 30vh;
+    }
+  
+    .code-block-editor-buttons {
+      flex-direction: column;
+      gap: 5px;
+    }
+  }  

@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import { Container } from "./styles";
+import { Container, ContainerWrapper } from "./styles";
 import { useAuthContext } from "../../context/useAuthContext";
 import useGetCodeBlocks from "../../hooks/useGetCodeBlocks";
 import useUpdateCodeBlack from "../../hooks/useUpdateCodeBlock";
 import { useSocketContext } from "../../context/SocketContext";
-import CodeBlockDropdown from "../../components/CodeBlockDropDown";
-import CodeBlockEditor from "../../components/CodeBlockEditor";
-import CodeBlockViewer from "../../components/CodeBlockViewer";
+import CodeBlockDropdown from "../../components/CodeBlockDropDown/CodeBlockDropDown";
+import CodeBlockEditor from "../../components/CodeBlockEditor/CodeBlockEditor";
+import CodeBlockViewer from "../../components/CodeBlockViewer/CodeBlockViewer";
 import Button from "react-bootstrap/esm/Button";
 import useGetCodeBlock from "../../hooks/useGetCodeBlock";
 import toast from "react-hot-toast";
@@ -21,9 +21,7 @@ const Home = () => {
   const [editMode, setEditMode] = useState(false);
   const { socket } = useSocketContext();
   const [showEmoji, setShowEmoji] = useState(false);
-  const { codeBlock, setCodeBlock, getCodeBlock } = useGetCodeBlock(
-    currCodeBlock ? currCodeBlock._id : null
-  );
+  const { codeBlock, setCodeBlock, getCodeBlock } = useGetCodeBlock();
   const [loading, setLoading] = useState(false);
 
   const handleSelect = async (e) => {
@@ -103,7 +101,7 @@ const Home = () => {
       />
 
       {currCodeBlock && !loading && (
-        <div>
+        <ContainerWrapper>
           {currCodeBlock.mentorId !== socket.id ? (
             <Button
               variant="success"
@@ -136,7 +134,7 @@ const Home = () => {
             />
           )}
           {showEmoji && !editMode && <div className="emoji-overlay">✅</div>}
-        </div>
+        </ContainerWrapper>
       )}
     </Container>
   );
