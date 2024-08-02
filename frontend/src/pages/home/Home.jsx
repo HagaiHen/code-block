@@ -8,9 +8,10 @@ import CodeBlockDropdown from "../../components/CodeBlockDropDown";
 import CodeBlockEditor from "../../components/CodeBlockEditor";
 import CodeBlockViewer from "../../components/CodeBlockViewer";
 import Button from "react-bootstrap/esm/Button";
+import useGetCodeBlock from "../../hooks/useGetCodeBlock";
+import toast from "react-hot-toast";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./emoji.css";
-import useGetCodeBlock from "../../hooks/useGetCodeBlock";
 
 const Home = () => {
   const { codeBlocks, setCodeBlocks } = useGetCodeBlocks();
@@ -26,7 +27,7 @@ const Home = () => {
   const [loading, setLoading] = useState(false);
 
   const handleSelect = async (e) => {
-    const res = await getCodeBlock(e._id)
+    const res = await getCodeBlock(e._id);
     setLoading(true);
     setPlaceholder(e.title);
     setEditMode(false);
@@ -34,7 +35,7 @@ const Home = () => {
 
     if (res.mentorId === "") {
       const updatedCodeBlock = await updateCodeBlock({
-        ...e,
+        ...res,
         mentorId: socket.id,
       });
       setCodeBlock(updatedCodeBlock);
@@ -43,10 +44,17 @@ const Home = () => {
   };
 
   const handleUpdate = async () => {
-    // if (socket?.id !== codeBlock?.mentorId) {
-    //   console.log("You do not have permission to update this code block.");
-    //   return;
-    // }
+    const res = await getCodeBlock(codeBlock._id);
+    if (res.mentorId === "") {
+      const updatedCodeBlock = await updateCodeBlock({
+        ...res,
+        mentorId: socket.id,
+      });
+      setCodeBlock(res);
+      toast.error("You do not have permission to update this code block.");
+      setEditMode(false);
+      return;
+    }
     setEditMode(false);
     try {
       await updateCodeBlock(currCodeBlock);
