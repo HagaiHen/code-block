@@ -20,7 +20,7 @@ const Home = () => {
   const [editMode, setEditMode] = useState(false);
   const { socket } = useSocketContext();
   const [showEmoji, setShowEmoji] = useState(false);
-  const { setCodeBlock, getCodeBlock } = useGetCodeBlock(
+  const { codeBlock, setCodeBlock, getCodeBlock } = useGetCodeBlock(
     currCodeBlock ? currCodeBlock._id : null
   );
   const [loading, setLoading] = useState(false);
@@ -43,10 +43,10 @@ const Home = () => {
   };
 
   const handleUpdate = async () => {
-    if (socket.id !== currCodeBlock?.mentorId) {
-      console.log("You do not have permission to update this code block.");
-      return;
-    }
+    // if (socket?.id !== codeBlock?.mentorId) {
+    //   console.log("You do not have permission to update this code block.");
+    //   return;
+    // }
     setEditMode(false);
     try {
       await updateCodeBlock(currCodeBlock);

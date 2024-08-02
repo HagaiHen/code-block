@@ -3,11 +3,12 @@ import Button from "react-bootstrap/Button";
 import useGetCodeBlock from "../hooks/useGetCodeBlock";
 
 const CodeBlockEditor = ({ currCodeBlock, setCurrCodeBlock, handleUpdate, setEditMode }) => {
-  const { codeBlock } = useGetCodeBlock(currCodeBlock._id);
-  const handleCancel = () => {
+  const { codeBlock, getCodeBlock } = useGetCodeBlock();
+  const handleCancel = async () => {
     setEditMode(false);
-    if (currCodeBlock.code !== codeBlock.code) {
-      setCurrCodeBlock(codeBlock);
+    const res = await getCodeBlock(currCodeBlock._id)
+    if (currCodeBlock.code !== res.code) {
+      setCurrCodeBlock(res);
     }
   };
   return (
