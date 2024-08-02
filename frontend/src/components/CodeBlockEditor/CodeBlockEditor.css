@@ -11,7 +11,7 @@
     width: 100%; /* Use a percentage to make it responsive */
     height: 50vh;
     white-space: pre;
-    font-family: Courier;
+    font-family:'Courier New', Courier, monospace;
     box-sizing: border-box;
     margin-bottom: 10px;
     border-radius: 10px;

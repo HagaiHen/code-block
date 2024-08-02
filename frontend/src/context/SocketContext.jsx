@@ -14,7 +14,7 @@ export const SocketContextProvider = ({ children }) => {
 
   useEffect(() => {
     // Set up the socket
-      const socket = io("http://localhost:5000");
+      const socket = io("https://code-block-wh41.onrender.com");
 
       setSocket(socket);
 
